@@ -2,3 +2,11 @@
     width:100%;
     min-height:600px;
 }
+
+.country rect{
+    fill:black;
+}
+.country text{
+	font-size:10px;
+}
+
