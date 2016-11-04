@@ -37,6 +37,9 @@ d3.queue()
             draw(rows1960)});
         d3.select('#year-2012').on('click', function(){
             draw(rows2012)});
+        console.table(rows1900);
+        console.table(rows1960);
+        console.table(rows2012);
 
     });
 
@@ -48,22 +51,27 @@ function draw(rows){
 
     console.table(top5);
     var update=plot.selectAll('.country')
-            .data(top5),
-            
-        enter=update.enter()
+            .data(top5,function(d){return d.country});
+
+    var enter=update.enter()
             .append('g')
-            .attr('class','country')
-            .attr('transform',function(d,i){return 'translate('+scaleX(i)+','+0+')'});
+            .attr('class','country');
+
         enter.append('rect')
             .attr('width',50);
         enter.append('text')
-            .attr('transform',function(d){return 'translate('+0+','+(h+20)+')'});
-        var nodetran=update.merge(enter);
+            .text(function(d){return d.country})
+            .attr('y',h+20);
+
+        update.exit().remove();
+
+    var nodetran=update.merge(enter);
         nodetran.select('rect')
-            .attr('y',function(d){return scaleY(d.count)})
-            .attr('height',function(d){return h-scaleY(d.count)});
-        nodetran.select('text')
-            .text(function(d){return d.country});  
+            .transition()
+            .attr('height',function(d){return h-scaleY(d.count)})        
+            .attr('y',function(d){return scaleY(d.count)});     
+        nodetran.transition().duration(1000)
+            .attr('transform',function(d,i){return 'translate('+scaleX(i)+','+0+')'});           
 
         //Draw axisY
         var axisY = d3.axisLeft()
